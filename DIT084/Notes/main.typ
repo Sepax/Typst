@@ -176,3 +176,190 @@ Each testing phase uses a different type of testing level:
 
 #figure(image("figures/v_model.png", width: 80%), caption: [The V model]) <v_model>
 
+== Test automation
+
+The use of software to control _the execution_ of tests, the _comparison_ of actual outcomes to predicted outcomes, the
+_setting up_ of test preconditions, and other test _control_ and test reporting functions.
+
+- Reduces cost
+- Reduces human error
+- Reduces variance in test quality from different individuals
+- Reduces cost of *regression testing*
+
+== Regression testing
+
+Regression testing is a type of software testing that seeks to uncover new
+software bugs, or regressions, in existing functional and non-functional areas
+of a system after changes such as enhancements, patches or configuration
+changes, have been made to them.
+
+- Orthogonal to other mentioned tests
+- Testing that is done *after changes* in the software (updates)
+- Standard part of maintenance phase of software development
+
+_The purpose of regression testing is to gain confidence that changes did not cause new failures._
+
+== Software testability
+
+The degree to which a system or component facilitates the establishment of test criteria and the performance of tests to
+determine whether those criteria have been met. _In simple terms: how hard is it to finds faults?_
+
+Testability is a condition of two factors:
+- How to provide the test values to the software?
+- How to observe the results of test execution?
+
+== Observability
+
+How easy it is to observe the behaviour of a program in terms of its outputs, effects on the environment and other hardware and software components.
+
+_Software that affects hardware devices, databases, or remote files have low observability!_
+
+== Controllability
+
+How easy it is to provide a program with the needed inputs, in terms of values, operations, and behaviours.
+
+- Easy to control software with inputs from keyboards
+- Inputs from hardware sensors or distributed software is harder
+
+== Test suit construction
+
+A test suite is a collection of test cases that are intended to be used to test a software program to show that it has some specified set of behaviours.
+
+- Most central actitivy of testing
+- Determines if we have enough test cases (stopping criteria)
+- Determines if we have the right test cases (represenative test cases)
+
+The quality of test suites defines the quality of the overall testing effort. When presenting test suites, we show only relevant parts of test cases.
+
+=== Black box testing
+
+Deriving test suites from external descriptions of the software, e.g.
+- Specifications
+- Requirements / Design
+- Input space knowledge
+
+=== White box testing
+
+Deriving test suites from the source code, e.g.
+
+- Conditions
+- Branches in execution
+- Statements
+
+_Modern techniques are a hybrid of both black- and white box_
+
+=== Coverage criteria
+
+= Debugging
+- How to systematicly find source of failer
+- Test-case to reproduce errors
+- Finidng a small failing input (if possible)
+- Observing exceution: Debbuggers and Logging
+- Program dependencies: data- and control
+
+== Motivation
+- Debuging needs to be systematic
+- Debuging may involve large inputs
+- Programs may have have thousands of memory locations
+- Program may pass through milions of states before failure occurs
+
+== The Steps Of Debugging
+- *1 : * Reproduce the error and try to understand the cause.
+- *2 : * Isolate and minimise the diffrent factors. (*Simplification*)
+- *3 : * Eyeball the code, where could it be? (*Reason backwards*)
+- *4 : * Devise experiments to test your hypothesis. (*Test hypothesis*)
+- *5 : * Repeat step 3 and 4 until the cause of the bug is determined
+- *6 : * Fix the bug and verify the fix
+- *7 : * Create a regression test (See below)
+
+_ Regression testing is a type of software testing that checks if recent code changes have negatively impacted existing features. It involves re-running previously created test cases after code modifications to catch any unintended side effects and ensure the ongoing stability of the software._
+
+== Problem Simplification
+
+As described in the diffrent steps of debugging, simplification is a way to determine the bug. The idea behing simplification is to minimize the failing input, so that it will be easier to understand what inputs causes the bug.
+
+*Simplification* can be reached by *Divide-and-Conquer*, where you *->*
+- *1 : * Cut away one half of the test input
+- *2 : * Check if any of the halves still exhibit failure.
+- *3 : * Repeat, until minimal input has been found.
+
+Although this works in some scenarios, this method has the following problems *->*
+- Tedious to re-run test manually
+- Boring, cut and paste, re-run ...  
+- What, if none of the halves exhibits a failure?
+
+Because of the problems with *Divide-and-Conquer*, in most cases automation of input simplificartion is more favourable.
+
+=== AUTOMATION OF INPUT SIMPLIFICATION
+
+Automation of input simplification in debugging involves using tools or algorithm to automatically reduce the complexity of input data. This helps identify and isolate bugs more efficiently, especially in large or complex software systems.
+
+One exampel of such a algorrithm is *Delta Debugging*. 
+Delta debugging is a software debugging technique that aims to isolate and identify the cause of a failure in a program by systematically narrowing down the input that triggers the failure. The term "delta" refers to the minimal change needed to reproduce the failure.
+
+The algorithm *Delta debugging* or *DD-Min* as it is also called, works as seen in figure 4 below.
+#figure(image("figures/deltaDebugging.png", width: 80%), caption: [Delta Debugging]) <ripr_model>
+
+=== Short Quiz On Delta debugging
+
+*Question : *
+
+Suppose test(c) returns FAIL whenever ccontains two or more occurrences of the letter X. 
+Apply the ddMin algorithm to minimise
+the failing input array [X, Z, Z, X] . Write down each step of the algorithm, and the values of n (number of chunks). Initially, n is 2.
+
+*Solution : *
+#figure(image("figures/solution-ddmin.png", width: 80%), caption: [Delta Debugging Quiz Answer]) <ripr_model>
+
+== Observing outcome, State Inspection
+
+Mainly there are three diffrent ways to perform state inspections of a program *->*
+- *Simple logging :* print statements
+- *Advanced loggin :* configureable what is printed based on level (e.g. OFF < FINE < INFO < WARNING < SEVERE), using e.g. Java’s logging package.
+- *Debugging tools :* e.g. Eclipse debugger or the Java debugger jbd (hand-in assignment 2)
+
+=== The Quick-And-Dirty Approach : Print Logging
+
+- *Manually add prit statements at code locations to be observed*
+- System.out.println(“size = "+ size);
+
+*Pros -> *
+- Simple and easy.
+- No tools or infrastructure needed, works on any platform.
+
+*Cons -> *
+- Code cluttering.
+- Output cluttering.
+- Performance penalty, possibly changed behaviour (real time apps).
+- Buffered output lost on crash
+- Source code access required, recompilation necessary.
+
+=== BASIC LOGGING IN JAVA
+- Each class can have its own logger-object.
+- Each logger has level:
+- OFF < FINE... < INFO < WARNING < SEVERE
+- Setting the level controls which messages gets written to log.
+- Quick Demo: Dubbel.java
+
+*Pros -> *
+- Output cluttering can be mastered
+- Small performance overhead
+- Exceptions are loggable
+- Log complete up to crash
+- Etc.
+
+*Cons -> *
+- Code cluttering - don’t try to log everything
+
+=== Using Debuggers
+Assume we have found a small failing test case and identified the
+faulty component.
+
+* Basic Functionality of a Debugger *
+- Execution Control: Stop execution at specific locations, breakpoints
+- Interpretation: Step-wise execution of code
+- State Inspection: Observe values of variables and stack
+- State Change: Change state of stopped program
+- Debugging tools: Eclipse GUI debugger or the Java debugger jbd
+
+
