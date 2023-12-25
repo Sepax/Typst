@@ -264,13 +264,13 @@ _Modern techniques are a hybrid of both black- and white box_
 - Program may pass through milions of states before failure occurs
 
 == The Steps Of Debugging
-- *1 : * Reproduce the error and try to understand the cause.
-- *2 : * Isolate and minimise the diffrent factors. (*Simplification*)
-- *3 : * Eyeball the code, where could it be? (*Reason backwards*)
-- *4 : * Devise experiments to test your hypothesis. (*Test hypothesis*)
-- *5 : * Repeat step 3 and 4 until the cause of the bug is determined
-- *6 : * Fix the bug and verify the fix
-- *7 : * Create a regression test (See below)
++ Reproduce the error and try to understand the cause.
++ Isolate and minimise the diffrent factors. (*Simplification*)
++ Eyeball the code, where could it be? (*Reason backwards*)
++ Devise experiments to test your hypothesis. (*Test hypothesis*)
++ Repeat step 3 and 4 until the cause of the bug is determined
++ Fix the bug and verify the fix
++ Create a regression test (See below)
 
 _ Regression testing is a type of software testing that checks if recent code changes have negatively impacted existing features. It involves re-running previously created test cases after code modifications to catch any unintended side effects and ensure the ongoing stability of the software._
 
@@ -279,9 +279,9 @@ _ Regression testing is a type of software testing that checks if recent code ch
 As described in the diffrent steps of debugging, simplification is a way to determine the bug. The idea behing simplification is to minimize the failing input, so that it will be easier to understand what inputs causes the bug.
 
 *Simplification* can be reached by *Divide-and-Conquer*, where you *->*
-- *1 : * Cut away one half of the test input
-- *2 : * Check if any of the halves still exhibit failure.
-- *3 : * Repeat, until minimal input has been found.
++ Cut away one half of the test input
++ Check if any of the halves still exhibit failure.
++ Repeat, until minimal input has been found.
 
 Although this works in some scenarios, this method has the following problems *->*
 - Tedious to re-run test manually
