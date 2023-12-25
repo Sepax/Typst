@@ -362,4 +362,86 @@ faulty component.
 - State Change: Change state of stopped program
 - Debugging tools: Eclipse GUI debugger or the Java debugger jbd
 
+= Formal Specification
+
+== Why We Need Formal Specifications: 
+
+=== The `absPositive()` Example
+
+- **Issue in Java's `Math.abs()` Function**: 
+  - Description: The Java standard library function `Math.abs()` can return a negative number when given `Integer.MIN_VALUE`. This is counterintuitive, as the absolute value should always be non-negative.
+
+The `absPositive()` Method
+- **Proposed Solution**: 
+  - Implement a new method `absPositive()`.
+- **Goal**: 
+  - Ensure that the returned value is always positive.
+
+Formal Specification
+- **Necessity**:
+  - A formal specification is crucial to clearly define expected behavior.
+- **Example Specification**:
+  - *Precondition*: Input is any integer.
+  - *Postcondition*: Output is a positive integer.
+  - *Invariant*: Output is the absolute value of the input unless input is `Integer.MIN_VALUE`.
+  - *Exception Handling*: For `Integer.MIN_VALUE`, output a predefined positive value.
+
+Benefits
+- **Clarity and Precision**: 
+  - Formal specifications eliminate ambiguity, ensuring that the method behaves as intended.
+- **Automated Verification**: 
+  - Tools like Dafny can be used to automatically verify that `absPositive()` adheres to its specification.
+
+== Specification As Contracts
+- *Concept*: Design by Contract.
+  - Description: Emphasizes the mutual agreement in method calls between caller (client) and callee (implementer).
+  - *Preconditions*: Requirements that the caller must fulfill.
+  - *Postconditions*: Guarantees provided by the callee upon method completion.
+
+== Formal vs. Informal Specifications
+- **Distinction**:
+  - Formal Specifications: Precise, unambiguous, and enable automated analysis.
+  - Informal Specifications: More readable but can be ambiguous and less precise.
+
+#example[
+  Informal specification:
+  - Very informal specification of enterPIN (pin:int)’:
+  Enter the PIN that belongs to the currently inserted bank card into the ATM, when not yet
+  authenticated. If a wrong PIN is entered three times in a row, the card is invalidated and
+  confiscated. After having entered the correct PIN, the customer is regarded as authenticated. 
+]
+
+#example[
+  Formal specification
+- Contract and Method Specification: `enterPIN` Method
+
+- *Contract Overview*:
+  - Description: Specifies the conditions and guarantees for the `enterPIN` method.
+
+- *Method*: `enterPIN(pin:int)`
+  - *Precondition*: 
+    - Card is inserted.
+    - User not yet authenticated.
+  - *Postconditions*:
+    - If pin is correct:
+      - User is authenticated.
+    - If pin is incorrect and `wrongPINCounter` was < 2 when entering the method:
+      - `wrongPINCounter` is increased by 1.
+      - User is not authenticated.
+    - If pin is incorrect and `wrongPINCounter` was >= 2:
+      - Card is confiscated.
+      - User is not authenticated.
+
+- *Implicit Preconditions in Natural Language Specification*:
+  - Assumptions: 
+    - Inserted card is not null.
+    - The card is valid.
+  - Note: These should also be formalized in the specification.
+]
+
+== Validity
+- A formula is valid if it is true in all possible states
+- Valid formulas are useful to simplify other formulas.
+- A formula is satisfiable if it is true at least once.
+
 
