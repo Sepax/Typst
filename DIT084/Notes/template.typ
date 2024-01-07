@@ -208,7 +208,9 @@
   v(18pt, weak: true)
 
   // Authors and affiliations
-  align(center)[
+  align(
+    center,
+  )[
     #if authors.len() > 0 {
       box(inset: (y: 10pt), {
         authors.map(author => {

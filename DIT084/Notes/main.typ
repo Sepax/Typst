@@ -30,7 +30,7 @@ The specification is the basis for testing, debugging and verification.
 In simple terms:
 
 $
-"Spec" = "Require" + "Ensure"
+  "Spec" = "Require" + "Ensure"
 $
 
 where *Require* is the set of requirements the program must satisfy in order to
@@ -44,7 +44,7 @@ satisfy.
   - *Ensure:* Return a sorted array of integers.
 ]
 
-== The contract methaphor
+== The contract methaphor <contract_methafor>
 
 Same priciple as a *legal contract*, between supplier and client.
 - *Supplier:* aka implementer, here a _class or method_ in Java.
@@ -178,8 +178,10 @@ Each testing phase uses a different type of testing level:
 
 == Test automation
 
-The use of software to control _the execution_ of tests, the _comparison_ of actual outcomes to predicted outcomes, the
-_setting up_ of test preconditions, and other test _control_ and test reporting functions.
+The use of software to control _the execution_ of tests, the _comparison_ of
+actual outcomes to predicted outcomes, the
+_setting up_ of test preconditions, and other test _control_ and test reporting
+functions.
 
 - Reduces cost
 - Reduces human error
@@ -197,12 +199,14 @@ changes, have been made to them.
 - Testing that is done *after changes* in the software (updates)
 - Standard part of maintenance phase of software development
 
-_The purpose of regression testing is to gain confidence that changes did not cause new failures._
+_The purpose of regression testing is to gain confidence that changes did not
+cause new failures._
 
 == Software testability
 
-The degree to which a system or component facilitates the establishment of test criteria and the performance of tests to
-determine whether those criteria have been met. _In simple terms: how hard is it to finds faults?_
+The degree to which a system or component facilitates the establishment of test
+criteria and the performance of tests to determine whether those criteria have
+been met. _In simple terms: how hard is it to finds faults?_
 
 Testability is a condition of two factors:
 - How to provide the test values to the software?
@@ -210,26 +214,31 @@ Testability is a condition of two factors:
 
 == Observability
 
-How easy it is to observe the behaviour of a program in terms of its outputs, effects on the environment and other hardware and software components.
+How easy it is to observe the behaviour of a program in terms of its outputs,
+effects on the environment and other hardware and software components.
 
-_Software that affects hardware devices, databases, or remote files have low observability!_
+_Software that affects hardware devices, databases, or remote files have low
+observability!_
 
 == Controllability
 
-How easy it is to provide a program with the needed inputs, in terms of values, operations, and behaviours.
+How easy it is to provide a program with the needed inputs, in terms of values,
+operations, and behaviours.
 
 - Easy to control software with inputs from keyboards
 - Inputs from hardware sensors or distributed software is harder
 
 == Test suit construction
 
-A test suite is a collection of test cases that are intended to be used to test a software program to show that it has some specified set of behaviours.
+A test suite is a collection of test cases that are intended to be used to test
+a software program to show that it has some specified set of behaviours.
 
 - Most central actitivy of testing
 - Determines if we have enough test cases (stopping criteria)
 - Determines if we have the right test cases (represenative test cases)
 
-The quality of test suites defines the quality of the overall testing effort. When presenting test suites, we show only relevant parts of test cases.
+The quality of test suites defines the quality of the overall testing effort.
+When presenting test suites, we show only relevant parts of test cases.
 
 === Black box testing
 
@@ -248,7 +257,162 @@ Deriving test suites from the source code, e.g.
 
 _Modern techniques are a hybrid of both black- and white box_
 
-=== Coverage criteria
+== Coverage criteria
+
+Most metrics used as quality criteria for test suites, describe the degree of
+some kind of coverage. These metric are called coverage criteria.
+
+These are crucial for testing _saftey critical software_.
+
+There are certain categories of coverage criteria:
+- Control flow graph coverage (white box)
+- Logic coverage (white box)
+- Input space partitioning (black box)
+
+== Control flow graph
+
+Represent a method to test as a graph, where:
+- Statements are nodes
+- Edges describe control flow between statements
+- Edges are labelled with conditions
+
+#important[*Rules of transformation* can be read in Section 7.3.1 "Structural Graph
+  coverage for source code" from the book: Introduction to software testing. *This
+  is required*]
+
+=== Control flow graph notions
+
+- *Execution path:* a path through the control flow graph that starts at the entry
+  point and is either
+infinite or ends at one of the exit points.
+- *Path condition:* a condition causing execution to take some path $p$
+- *Feasible execution path:* an execution path for which a satisfiable path
+  condition exists.
+
+#note[A branch or statement is feasible if it is contained in at least one feasible
+  execution path.]
+
+== Types of coverage criteria
+
+=== Statement coverage (SC)
+
+Satisfied by a test suite _TS_, _iff_ for every node $n$ in the control flow
+graph there is at least one test in _TS_ causing an execution path via $n$.
+
+=== Branch coverage (BC)
+
+Satisfied by a test suite _TS_, _iff_ for every edge $e$ in the control flow
+graph there is at least one test in _TS_ causing an execution path via $e$. _Note that this is a stronger criterion than statement coverage._
+
+=== Path coverage (PC)
+
+Satisfied by a test suite _TS_, _iff_ for every feasible execution path $p$ in
+the control flow graph there is at least one test in _TS_ causing an execution
+path via $p$. _Note that this is a stronger criterion than branch coverage._
+
+=== Logic coverage (LC)
+
+Satisfied by a test suite _TS_, _iff_ for every predicate $p$ in the control
+flow graph there is at least one test in _TS_ causing an execution path via $p$.
+
+Logical (boolean) expressions can come from many sources. We focus on decisions
+in the source code _(if, while, for, etc.)_.
+
+=== Decision coverage (DC)
+
+Let the decisions of a program $p$, $D(p)$, be the set of all logical
+expressions which $p$
+branches on.
+
+For a given decision $d$, _DC_ is satisfied by a test suite _TS_ if it:
+- Contains at least two tests,
+- one where $d$ evaluates to true,
+- one where $d$ evaluates to false
+
+For a given program $p$, _DC_ is satisfied by _TS_ if it satisfies _DC_ *for all* decisions $d in D(p)$.
+
+#example[
+  #figure(
+    image("figures/decision_coverage.png", width: 80%),
+    caption: [Decision coverage example],
+  ) <decision_coverage>
+]
+
+=== Condition Coverage (CC)
+
+#figure(
+  image("figures/condition_coverage.png", width: 80%),
+  caption: [Condition coverage],
+) <condition_coverage>
+#figure(
+  image("figures/condition_coverage_example.png", width: 80%),
+  caption: [Condition coverage example],
+) <condition_coverage_example>
+
+=== Modified Condition Decision Coverage (MCDC)
+
+#figure(
+  image("figures/mcdc.png", width: 80%),
+  caption: [Modified Condition Decision Coverage],
+) <mcdc>
+#figure(
+  image("figures/mcdc_example.png", width: 80%),
+  caption: [Modified Condition Decision Coverage example],
+) <mcdc_example>
+
+== Input domain modeling
+
+- The input domain $D$: the possible values that input parameters can have.
+- A partition $q$ defines a set of equvilence classes (or simply blocks $B_q$)
+  over $D$
+
+A partition $q$ satisfies: (completeness)
+
+$ union.big_(b in B_q) b = D $
+
+Blocks are pairwise disjoint:
+
+$ b_i union b_j = emptyset, wide i eq.not j, wide b_i, b_j in B_q $
+
+- Test values in the same block are assumed to contain _equally useful values_.
+- Test cases contain values from each block.
+
+#example[
+  #figure(
+    image("figures/partitioning.png", width: 80%),
+    caption: [Partitioning example],
+  ) <partitioning>
+]
+
+=== Strategies for generating blocks
+
+- Valid vs. invalid values: all valid and all invalid (completeness)
+- Sub-partition: valid values serving different functionality.
+- Boundaries: values at or close boundaries often cause problems (stress testing).
+- Normal use (happy path): the desired outcome.
+- Missing blocks vs overlapping blocks (complete vs disjoint)
+- Special values Pointers: (null and not null), collection: (empty and non empty),
+  integer (zero a special value).
+
+#example[
+  #figure(
+    image("figures/example_triang.png", width: 80%),
+    caption: [Example: triang(0)],
+  ) <example_triang>
+  #figure(
+    image("figures/example_triang_2.png", width: 80%),
+    caption: [Example: triang(0) - Solution],
+  ) <example_triang_2>
+]
+
+All combinations of blocks from all characteristics must be used. The number of
+tests is the product of the number of blocks for each partition. _All Combinations Coverage *ACoC*_
+
+For _triang()_, we have three characteristics, each with 4 blocks. Thus, we need $4 dot 4 dot 4 = 64$ test
+cases.
+
+Recall: _different choices of values from the same block are equivalent from testing
+perspective_.
 
 = Debugging
 - How to systematicly find source of failer
@@ -272,62 +436,86 @@ _Modern techniques are a hybrid of both black- and white box_
 + Fix the bug and verify the fix
 + Create a regression test (See below)
 
-_ Regression testing is a type of software testing that checks if recent code changes have negatively impacted existing features. It involves re-running previously created test cases after code modifications to catch any unintended side effects and ensure the ongoing stability of the software._
+_ Regression testing is a type of software testing that checks if recent code
+changes have negatively impacted existing features. It involves re-running
+previously created test cases after code modifications to catch any unintended
+side effects and ensure the ongoing stability of the software._
 
 == Problem Simplification
 
-As described in the diffrent steps of debugging, simplification is a way to determine the bug. The idea behing simplification is to minimize the failing input, so that it will be easier to understand what inputs causes the bug.
+As described in the diffrent steps of debugging, simplification is a way to
+determine the bug. The idea behing simplification is to minimize the failing
+input, so that it will be easier to understand what inputs causes the bug.
 
 *Simplification* can be reached by *Divide-and-Conquer*, where you *->*
 + Cut away one half of the test input
 + Check if any of the halves still exhibit failure.
 + Repeat, until minimal input has been found.
 
-Although this works in some scenarios, this method has the following problems *->*
+Although this works in some scenarios, this method has the following problems
+*->*
 - Tedious to re-run test manually
-- Boring, cut and paste, re-run ...  
+- Boring, cut and paste, re-run ...
 - What, if none of the halves exhibits a failure?
 
-Because of the problems with *Divide-and-Conquer*, in most cases automation of input simplificartion is more favourable.
+Because of the problems with *Divide-and-Conquer*, in most cases automation of
+input simplificartion is more favourable.
 
 === AUTOMATION OF INPUT SIMPLIFICATION
 
-Automation of input simplification in debugging involves using tools or algorithm to automatically reduce the complexity of input data. This helps identify and isolate bugs more efficiently, especially in large or complex software systems.
+Automation of input simplification in debugging involves using tools or
+algorithm to automatically reduce the complexity of input data. This helps
+identify and isolate bugs more efficiently, especially in large or complex
+software systems.
 
-One exampel of such a algorrithm is *Delta Debugging*. 
-Delta debugging is a software debugging technique that aims to isolate and identify the cause of a failure in a program by systematically narrowing down the input that triggers the failure. The term "delta" refers to the minimal change needed to reproduce the failure.
+One exampel of such a algorrithm is *Delta Debugging*. Delta debugging is a
+software debugging technique that aims to isolate and identify the cause of a
+failure in a program by systematically narrowing down the input that triggers
+the failure. The term "delta" refers to the minimal change needed to reproduce
+the failure.
 
-The algorithm *Delta debugging* or *DD-Min* as it is also called, works as seen in figure 4 below.
-#figure(image("figures/deltaDebugging.png", width: 80%), caption: [Delta Debugging]) <ripr_model>
+The algorithm *Delta debugging* or *DD-Min* as it is also called, works as seen
+in figure 4 below.
+#figure(
+  image("figures/deltaDebugging.png", width: 80%),
+  caption: [Delta Debugging],
+) <ripr_model>
 
 === Short Quiz On Delta debugging
 
-*Question : *
+*Question :*
 
-Suppose test(c) returns FAIL whenever ccontains two or more occurrences of the letter X. 
-Apply the ddMin algorithm to minimise
-the failing input array [X, Z, Z, X] . Write down each step of the algorithm, and the values of n (number of chunks). Initially, n is 2.
+Suppose test(c) returns FAIL whenever ccontains two or more occurrences of the
+letter X. Apply the ddMin algorithm to minimise the failing input array [X, Z,
+Z, X] . Write down each step of the algorithm, and the values of n (number of
+chunks). Initially, n is 2.
 
-*Solution : *
-#figure(image("figures/solution-ddmin.png", width: 80%), caption: [Delta Debugging Quiz Answer]) <ripr_model>
+*Solution :*
+#figure(
+  image("figures/solution-ddmin.png", width: 80%),
+  caption: [Delta Debugging Quiz Answer],
+) <ripr_model>
 
 == Observing outcome, State Inspection
 
-Mainly there are three diffrent ways to perform state inspections of a program *->*
+Mainly there are three diffrent ways to perform state inspections of a program
+*->*
 - *Simple logging :* print statements
-- *Advanced loggin :* configureable what is printed based on level (e.g. OFF < FINE < INFO < WARNING < SEVERE), using e.g. Java’s logging package.
-- *Debugging tools :* e.g. Eclipse debugger or the Java debugger jbd (hand-in assignment 2)
+- *Advanced loggin :* configureable what is printed based on level (e.g. OFF <
+  FINE < INFO < WARNING < SEVERE), using e.g. Java’s logging package.
+- *Debugging tools :* e.g. Eclipse debugger or the Java debugger jbd (hand-in
+  assignment 2)
 
 === The Quick-And-Dirty Approach : Print Logging
 
 - *Manually add prit statements at code locations to be observed*
 - System.out.println(“size = "+ size);
 
-*Pros -> *
+*Pros ->*
 - Simple and easy.
 - No tools or infrastructure needed, works on any platform.
 
-*Cons -> *
+*Cons ->*
 - Code cluttering.
 - Output cluttering.
 - Performance penalty, possibly changed behaviour (real time apps).
@@ -341,25 +529,54 @@ Mainly there are three diffrent ways to perform state inspections of a program *
 - Setting the level controls which messages gets written to log.
 - Quick Demo: Dubbel.java
 
-*Pros -> *
+*Pros ->*
 - Output cluttering can be mastered
 - Small performance overhead
 - Exceptions are loggable
 - Log complete up to crash
 - Etc.
 
-*Cons -> *
+*Cons ->*
 - Code cluttering - don’t try to log everything
 
 === Using Debuggers
-Assume we have found a small failing test case and identified the
-faulty component.
+Assume we have found a small failing test case and identified the faulty
+component.
 
-* Basic Functionality of a Debugger *
+* Basic Functionality of a Debugger*
 - Execution Control: Stop execution at specific locations, breakpoints
 - Interpretation: Step-wise execution of code
 - State Inspection: Observe values of variables and stack
 - State Change: Change state of stopped program
 - Debugging tools: Eclipse GUI debugger or the Java debugger jbd
 
+= Formal Specification
+
+Describing contracts of units (methods) in a mathematically precise (formal)
+language.
+
+Motivation:
+- Higher degree of precision
+- Automation of program analysis
+  - program verification
+  - static checking
+  - test case generation
+
+== Unit specification
+
+Methods can be specified by referring to:
+- result value
+- initial values of formal parameters
+- pre-state and post-state
+
+= Dafny
+
+Object oriented language desinged to make it easy to write *correct* code.
+
+- Allow annotations specifying program behaviour, as part of the language.
+- Automatically proves that the code adheres to specications.
+- Absence of run-time errors, e.g. null-pointers, index-out-of-bounds etc.
+- Termination checking of loops.
+
+== Fields
 
