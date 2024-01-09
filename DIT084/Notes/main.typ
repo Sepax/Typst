@@ -569,6 +569,72 @@ Methods can be specified by referring to:
 - initial values of formal parameters
 - pre-state and post-state
 
+== Writing formal Specifications
+
+When writing a formal specification one should list the required pre and
+post-conditions. How to find these and formalize them can be tricky.
+
+#example[
+Consider the very informal specification of `enterPIN (pin:int)`:
+
+_"Enter the PIN that belongs to the currently inserted bank card into the ATM,
+when not yet authenticated. If a wrong PIN is entered three times in a row, the
+card is invalidated and confiscated. After having entered the correct PIN, the
+customer is regarded as authenticated."_
+
+Contract states _what is guaranteed_ (postcondition), _under which conditions_ (precondition).
+
+Preconditions:
+- Card is inserted, user not yet authenticated.
+
+Postconditions:
+- If PIN is correct, then the user is authenticated.
+- If PIN is incorrect and `wrongPINCounter` was $<2$ when entering the method,
+  then `wrongPINCounter` is increased by $1$ and user is not authenticated.
+- If PIN is incorrect and `wrongPINCounter` was $>=2$ when entering the method,
+  then card is conficaded and user is not authenticated.
+
+There are also some implicit ones:
+
+Implicit preconditions:
+- ATM card slot is free
+- Card is valid
+- Card is not null
+
+Implicit postconditons:
+- ATM card slot is occupied
+- User is not authenticated
+- `wrongPINCounter` is $0$
+]<formal_spec_ex>
+
+#important[Implicit pre/postconditions should also be formalised, for example that the
+  arguments of a method should not be null, as shown in the above example]
+
+== Validity
+
+In context of formal specification, we want to know if some *formula hold true
+in a particular program state.*
+
+- A formula is *valid* if it is true in *all possible states*
+- Valid formulas are *useful to simplify other formulas*
+- *A formula is satisfiable if it is true at least once*
+
+#example[
+  The following *useful* formulas are valid, i.e. you can replace the formula on
+  the left side by the one on the right.
+
+  1. $not(exists x: t. med P) <-> forall x: t. med not P$
+  2. $not(forall x: t. med P) <-> exists x: t. med not P$
+  3. $(forall x: t. med P and Q) <-> (forall x: t. med P) and (forall x: t. med Q)$
+  4. $(exists x: t. med P or Q) <-> (exists x: t. med P) or (exists x: t. med Q)$
+
+  #figure(
+    image("figures/useful_formulas.png", width: 90%),
+    caption: [Some other useful valid formulas],
+  )<useful_formulas>
+
+]
+
 = Dafny
 
 Object oriented language desinged to make it easy to write *correct* code.
@@ -579,4 +645,358 @@ Object oriented language desinged to make it easy to write *correct* code.
 - Termination checking of loops.
 
 == Fields
+
+Declaring fields.
+- Variables declared with keyword `var`
+- Type annotations given by `:`
+- Assignment written `:=`
+- Several variables can be declared at once.
+- Parallel assignments possible.
+
+#sourcecode[```js
+  var insertedCard : BankCard?;
+  var wrongPINCounter : int;
+  var customerAuthenticated : bool;
+```]
+
+#sourcecode[```js
+  var x : int;
+  x := 34;
+  var y, z := true, false //parallel assignment
+```]
+
+#note[The prefix `?` clarifies that the field is allowed to be `null`. ]
+
+== Constructor
+
+Example of a constructor.
+
+#sourcecode[```js
+    constructor (n: int)
+      modifies this
+    {
+      ...
+    }
+    ```]
+
+== Methods
+
+Example of some methods
+
+#sourcecode[```js
+    method insertCard (card : BankCard){ ... }
+    method enterPIN (pin : int) { ... }
+    method add (num1 : int, num2 : int) returns (result : int) { ... }
+    ```]
+
+== Propositional logic
+
+All variables $P, Q, R$ (aka propositions) are booleans, i.e. take values True
+or False.
+
+#table(
+  columns: (auto, auto, auto),
+  inset: 10pt,
+  align: horizon,
+  [*Connectiv*],
+  [*Meaning*],
+  [*Dafny*],
+  [$not P$],
+  [not $P$],
+  [`!P`],
+  [$P and Q$],
+  [$P$ and $Q$],
+  [`P && Q`],
+  [$P or Q$],
+  [$P$ or $Q$],
+  [`P || Q`],
+  [$P -> Q$],
+  [$P$ implies $Q$],
+  [`P ==> Q`],
+  [$P <-> Q$],
+  [$P$ is equivalent to $Q$],
+  [`P <==> Q`],
+)
+
+== First order logic: Quantifiers
+
+Writing quantifiers in Dafny.
+
+#table(
+  columns: (auto, auto, auto),
+  inset: 10pt,
+  align: horizon,
+  [*Connectiv*],
+  [*Meaning*],
+  [*Dafny*],
+  [$forall x: t. med P$],
+  [For all $x$ of type $t$, $P$ holds],
+  [`forall x : t :: P`],
+  [$exists x: t. med P$],
+  [There exists an $x$ of type $t$, such that $P$ holds],
+  [`exists x : t :: P`],
+)
+
+#example[
+The array `a` only holds values less than or equal to $2$
+
+#sourcecode[```java
+    forall i : int :: 0 <= i < a.Length ==> arr[i] <= 2;
+  ```]
+
+At least one entry holds the value $1$
+
+#sourcecode[```java
+    exists i : int :: 0 <= i < a.Length && a[i] == 1
+  ```]
+]
+
+== Requires & Ensures
+
+The `requires` and `ensures` prefixes represents pre/postconditions which can
+consist of:
+- quantifiers, logic connectives
+- functions ( `function fibonacci`, etc. )
+- predicates
+
+They have no impact on runtime and are just for checking the validity of the
+program.
+
+#sourcecode[```java
+method example(x : int, y : int) returns (m : int)
+  requires x >= 0 && y < = // precondition
+  ensures m <= 0 // postcondition
+{ return y*x }
+```]
+
+== Classes
+
+- Keyword `class`
+- No access modifiers like public, private, etc.
+- Fields declared by `var` keyword (local variables)
+- Objects declared with `new` keyword + `constructor` methods
+  - Can have one anonymous (unamed constructor) + several named ones.
+
+#sourcecode[```java
+class MyClass {
+  var field : int;
+
+  constructor() {
+    field := 0;
+  }
+
+  constructor Init(x : int) {
+    field := x;
+  }
+
+  constructor Init2(x : int, y :int) {
+    field := x + y;
+  }
+}
+```]
+
+#sourcecode[```java
+var myObject  := new MyClass();
+var myObject2 := new MyClass.Init(5);
+var myObject3 := new MyClass.Init2(5, 6)
+```]
+
+#pagebreak()
+
+== Assertions
+
+- Keyword `assert`
+- Placed in method body
+- Written in specification language
+- Evaluated at compile-time
+
+Dafny tries to prove *assertion hold for all executions of code*.
+
+#sourcecode[```java
+method Abs(x : int) returns (r : int)
+  ensures 0 <= r {
+  if (x < 0) {r := -x;}
+  else {r := x;}
+}
+
+method Test() {
+  var v := Abs(-3)
+  assert 0 <= v;
+}
+```]
+
+#note[Assertions can only be proved based on the annotions (`requires`, `ensures`) of
+other methods. The previous method `test` works because the assertion is based
+on the `ensures` of the method `Abs`.
+
+The following test case would not work:
+
+#sourcecode[```java
+method Test() {
+  var v := Abs(-3)
+  assert v == 3;
+}
+```]
+
+This is because Dafny only knows that `Abs` returns a value greater than or
+equal to 0. It does not know that it returns 3.
+
+However, if we edit the postcondition to the following:
+
+#sourcecode[```java
+ensures 0 <= x ==> r == x; // result same as x for positive input x
+ensures x < 0 ==> r == -x; // result positive x for negative input x
+```]
+
+Then the test case would work. Dafny now knows that if $x$ is negative, the
+result will be $-x$ (positive $x$).]
+
+== (Ghost) Functions
+
+Part of the specification language, thus functions cannot modify objects and
+write to memory (unlike methods). _so it is SAFE to use in spec_.
+- Can only be used in spec (annotations)
+- Single unnamed return value
+- body is a single statement (no semicolon)
+
+#sourcecode[```java
+ghost function abs (x : int) : int {
+  if x < 0 then -x else x
+}
+```]
+
+Now we can use `abs` in our specification.
+
+#sourcecode[```java
+method Abs(x : int) returns (r : int)
+  ensures r == abs(x) {
+  if (x < 0) {r := -x;}
+  else {r := x;}
+}
+```]
+
+== Function methods
+
+A function method can be used in both spec and execution. If we consider the
+previus method `Abs`, it might not even be necessary.
+
+#sourcecode[```java
+function abs (x : int) : int {
+  if x < 0 then -x else x
+}
+
+method Test() {
+  var v := abs(-3)
+  assert v == 3;
+}
+```]
+
+#note[Dafny remembers function method bodies, unlike methods.]
+
+== Predicates
+
+Recall, a predicate in first-order logic is a function returning a boolean
+value. In Dafny, predicates are used similarly to functions. They can be used
+both in spec and execution.
+
+#sourcecode[```java
+ghost predicate isEven (x : int) { x % 2 == 0}
+```]
+
+is equivalent to
+
+#sourcecode[```java
+ghost function isEven (x : int) : bool { x % 2 == 0 }
+```]
+
+and
+
+#sourcecode[```java
+predicate isEven (x : int) { x % 2 == 0}
+```]
+
+is equivalent to
+
+#sourcecode[```java
+function isEven (x : int) : bool { x % 2 == 0 }
+```]
+
+#pagebreak()
+
+== Modifies & Reads clauses
+
+Automated proofs are hard and can be slow. In Dafny, this means that we need to
+add certain annotations to help.
+- Dafny methods manipulating objects must declare what fields they might modify.
+- Dafny functions/predicates must declare what memory locations (objects) they
+  might read.
+
+#sourcecode[```java
+class BankCard {
+  var pin : int;
+  var accNo : int;
+  var valid : bool;
+
+  ...
+
+  predicate isValid()
+    reads this`valid; // read clause
+    { this.valid }
+
+  method invalidateCard()
+    modifies this`valid; // modifies clause
+    ensures !isValid();
+    { valid := false;}
+
+  ...
+}
+```]
+
+#note[back-tick character is used to refer to fields of the object (class) such as
+  int, bool, etc. In the case of objects inside the class this is not needed.]
+
+== Old keyword
+
+old-keyword in specification refers to the *value of a field before the method
+was called*.
+
+#example[`old(wrongPINCounter)` refers to its value before `insertPIN` method was called.]
+
+== Arrays
+
+Declaring and initialising an array
+
+#sourcecode[```java
+var a : array<int>;
+a := new int[3];
+assert a.Length == 3;
+a[0], a[1], a[2] := 0, 0, 0;
+```]
+
+Declaring a matrix
+
+#sourcecode[```java
+var matrix : array2<int>;
+matrix := new int[3, 4];
+assert matrix.Length0 == 3 && matrix.Length1 == 4;
+```]
+
+#pagebreak()
+
+Parallel assignment: set all entries to $0$
+
+#sourcecode[```java
+forall(i | 0 <= i < a.Length)
+{a[i] := 0;}
+forall (i,j | 0 <= i < m.Length0 && 0 <= j < m.Length1)
+{m[i,j] := 0; }
+```]
+
+Parallel assignment: increment all entries by $1$. Note that all right-hand side
+expressions is evaluated before assignments.
+
+#sourcecode[```java
+forall(i | 0 <= i < a.Length)
+{a[i] := a[i] + 1;}
+```]
 
