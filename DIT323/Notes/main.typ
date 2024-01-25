@@ -430,7 +430,70 @@ quotient of $A$ by $R$ is the set of all equivalence classes of $R$.
 
 #pagebreak()
 
-= Proofs, induction & rectursive functions
+= Proofs, induction & recursive functions
+
+== Basic proof methods
+
+#table(
+  columns: (auto, auto),
+  inset: 10pt,
+  align: center,
+  [*To prove*],
+  [*Method*],
+  [$p => q$],
+  [Assume $p$ and prove $q$],
+  [$p => q$],
+  [Assume $not$ q and prove $not p$],
+  [$forall x in A. P(x)$],
+  [Assume that we have an $x in A$ and prove $P(x)$],
+  [$p <=> q$],
+  [Prove both $p => q$ and $q = p$],
+  [$not p$],
+  [Assume $p$ and derive a contradiction],
+  [$p$],
+  [Prove $not not p$],
+)
+
+== Induction
+
+For a natural number predicate $P$ we can prove $forall n in NN: P(n)$ in the
+following way:
+
+- Prove $P(0)$
+- Prove $forall n in NN: P(n) => P(n+1)$
+
+with the formula:
+
+$ P(0) and (forall n in NN : P(n) => P(n+1)) => forall n in NN : P(n) $
+
+== Proof by counterexample
+
+To prove that a statement is false, we can find a counterexample. _In general, to prove:_
+
+
+$   & not(forall "natural number predicates" P: P(0) and \
+  & (forall n in NN : n gt.eq 1 and P(n) => P(n + 1)) => \
+  & forall n in NN : n gt.eq 1 => P(n)) $
+
+_we assume:_
+
+$   & forall "natural number predicates" P: P(0) and \
+  & (forall n in NN : n gt.eq 1 and P(n) => P(n + 1)) => \
+  & forall n in NN : n gt.eq 1 => P(n) $
+
+_and derive a contradiction._
+
+#example[
+  The following statement does not hold for $P(n) := n eq.not 1$ and $n = 1$
+   
+  $ P(0) and (forall n in NN : n gt.eq 1 and P(n) => P(n+1)) => forall n in NN : n gt.eq 1 => P(n) $
+   
+  _The hypotheses hold, but not the conclusion._
+  
+   
+]
+
+
 
 
 
