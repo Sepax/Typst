@@ -495,6 +495,18 @@ _and derive a contradiction._
 
 
 
+= Nondeterministic finite automata
+
+== NFAS
+
+LiKE DFAs but with multiple transisitons may be possible.
+
+- Can be in multiple states at once
+- Can be easier to “program”.
+- Can be much more compact.
+
+An NFA can be given by a 5-tuple $(Q)$
+
 
 
 
