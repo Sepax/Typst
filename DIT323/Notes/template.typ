@@ -3,7 +3,8 @@
 #import "@preview/whalogen:0.1.0": ce
 #import "@preview/codelst:1.0.0": sourcecode, codelst
 #import "@preview/showybox:2.0.1": showybox
-#import "@preview/ctheorems:1.0.0": *
+#import "@preview/ctheorems:1.1.0": *
+#show: thmrules
 #import "@preview/colorful-boxes:1.2.0": *
 
 // Template ============================================================
@@ -172,10 +173,18 @@
       numbering("1.1", ..n)
     }
   })
+   
   show heading: it => {
     it
     v(12pt, weak: true)
   }
+   
+  show heading.where(level: 4): set text(
+    font: "Times New Roman",
+    size: 10pt,
+    weight: "semibold",
+    style: "italic",
+  )
    
   // Configure code blocks.
   show raw.where(block: false): it => box(fill: luma(240), inset: (x: 2pt), outset: (y: 3pt), radius: 1pt)[#it]
@@ -385,132 +394,26 @@
   $#con$,
 )
 
-// ==== Nice boxes using showybox and ctheorems packages ====
-//
-// | Environment | Accent Color         |
-// |-------------|----------------------|
-// | Definition  | olive                |
-// | Example     | purple               |
-// | Note        | blue                 |
-// | Attention   | red / rgb("#DC143C") |
-// | Quote       | black                |
-// | Theorem     | navy                 |
-// | Proposition | maroon               |
+// ==== Nice boxes using ctheorems package ====
 
 #let boxnumbering = "1.1.1.1.1.1"
 #let boxcounting = "heading"
 
-#let definition = thmenv(
-  "definition",
-  "Definition",
-  boxcounting,
-  none,
-  (name, number, body, ..args) => {
-    showybox(title: [#name #h(1fr) Definition #number], frame: (
-      border-color: olive,
-      title-color: olive.lighten(30%),
-      body-color: olive.lighten(95%),
-      footer-color: olive.lighten(80%),
-    ), ..args.named(), body)
-  },
-).with(numbering: boxnumbering)
+#let theorem = thmbox("theorem", "Theorem", fill: rgb("#e8e8f8"))
 
-#let example = thmenv(
-  "example",
-  "Example",
-  boxcounting,
-  none,
-  (name, number, body, ..args) => {
-    showybox(title: [#name #h(1fr) Example #number], frame: (
-      border-color: purple,
-      title-color: purple.lighten(30%),
-      body-color: purple.lighten(95%),
-      footer-color: purple.lighten(80%),
-    ), ..args.named(), body)
-  },
-).with(numbering: boxnumbering)
+#let lemma = thmbox("theorem", "Lemma", fill: rgb("#efe6ff"))
 
-#let note = thmenv("note", "Note", boxcounting, none, (name, number, body, ..args) => {
-  showybox(title: [#name #h(1fr) Note #number], frame: (
-    border-color: blue,
-    title-color: blue.lighten(30%),
-    body-color: blue.lighten(95%),
-    footer-color: blue.lighten(80%),
-  ), ..args.named(), body)
-}).with(numbering: boxnumbering)
+#let corollary = thmbox("corollary", "Corollary", base: "theorem", fill: rgb("#f8e8e8"))
 
-#let attention = thmenv(
-  "attention",
-  "Attention",
-  boxcounting,
-  none,
-  (name, number, body, ..args) => {
-    showybox(title: [#name #h(1fr) Attention #number], frame: (
-      border-color: rgb("#DC143C"),
-      title-color: rgb("#DC143C").lighten(30%),
-      body-color: rgb("#DC143C").lighten(95%),
-      footer-color: rgb("#DC143C").lighten(80%),
-    ), ..args.named(), body)
-  },
-).with(numbering: boxnumbering)
+#let definition = thmbox("definition", "Definition", fill: rgb("#EAF2F9"))
 
-#let quote = thmenv("quote", "Quote", boxcounting, none, (name, number, body, ..args) => {
-  showybox(title: [#name #h(1fr) Quote #number], frame: (
-    border-color: black,
-    title-color: black.lighten(30%),
-    body-color: black.lighten(95%),
-    footer-color: black.lighten(80%),
-  ), ..args.named(), body)
-}).with(numbering: boxnumbering)
+#let example = thmbox("example", "Example", fill: rgb("#eeffee")).with(numbering: none)
 
-#let theorem = thmenv(
-  "theorem",
-  "Theorem",
-  boxcounting,
-  none,
-  (name, number, body, ..args) => {
-    showybox(title: [#name #h(1fr) Theorem #number], frame: (
-      border-color: navy,
-      title-color: navy.lighten(30%),
-      body-color: navy.lighten(95%),
-      footer-color: navy.lighten(80%),
-    ), ..args.named(), body)
-  },
-).with(numbering: boxnumbering)
-
-#let proposition = thmenv(
-  "proposition",
-  "Proposition",
-  boxcounting,
-  none,
-  (name, number, body, ..args) => {
-    showybox(title: [#name #h(1fr) Proposition #number], frame: (
-      border-color: maroon,
-      title-color: maroon.lighten(30%),
-      body-color: maroon.lighten(95%),
-      footer-color: maroon.lighten(80%),
-    ), ..args.named(), body)
-  },
-).with(numbering: boxnumbering)
-
-// Notes
-
-#let important(title: "Important", body) = {
-  return slantedColorbox(title: "Important", color: "red", radius: 0pt, width: auto)[
-    #body
-  ]
-}
-
-#let note(title: "Note", body) = {
-  return slantedColorbox(title: "Note", color: "blue", radius: 0pt, width: auto)[
-    #body
-  ]
-}
-
-#let example(title: "Example", body) = {
-  return slantedColorbox(title: "Example", color: "green", radius: 0pt, width: auto)[
-    #body
-  ]
-}
+#let proof = thmplain(
+  "proof",
+  "Proof",
+  base: "theorem",
+  bodyfmt: body => [#body #h(1fr) $square$],
+).with(numbering: none)
 
 

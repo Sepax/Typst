@@ -242,7 +242,7 @@ A set is roughly speaking a collection of elements.
 
 === Set operations
 
-==== _Union, intersection and set difference_
+==== Union, intersection and set difference
 
 - *$A union B$* is the union of $A$ and $B$. (the set of all elements that are in $A$ or $B$)
 - *$A sect B$* is the intersection of $A$ and $B$. (the set of all elements that
@@ -250,7 +250,7 @@ A set is roughly speaking a collection of elements.
 - *$A backslash B = A - B$* is the set difference of $A$ and $B$. (the set of all
   elements that are in $A$ but not in $B$)
 
-==== _Complement_
+==== Complement
 
 - *$overline(A)$* is the complement of $A$. (the set of all elements that are not
   in $A$)
@@ -265,7 +265,7 @@ A set is roughly speaking a collection of elements.
   - *$N times N times N$* is the set of all triples of natural numbers.
 ]
 
-==== _Power set_
+==== Power set
 
 - *$℘(A) = { A | A subset.eq S}$* is the power set of $A$. (the set of all subsets
   of $A$)
@@ -274,7 +274,7 @@ A set is roughly speaking a collection of elements.
   - *$℘({1, 2}) = {emptyset, {1}, {2}, {1, 2}}$*
 ]
 
-==== _Set of all finite subsets_
+==== Set of all finite subsets
 
 - *$"Fin"(A) = { A | A subset.eq S, A "is finite" }$* is the set of all finite
   subsets of $A$.
@@ -295,7 +295,7 @@ different aspects of element connections.
 - Notation: $x R y$ same as $(x, y) in R$
 - Can be generalised from $A times A$ to $A times B times C times dots.h.c $
 
-==== _Some binary relational properties_
+==== Some binary relational properties
 
 For $R subset.eq A times B$:
 
@@ -309,12 +309,12 @@ For $R subset.eq A^2$:
 - Transitive: $forall x, y, z in A: x R y and y R z => x R z$
 - Antisymmetric: $forall x, y in A: x R y and y R x => x = y$
 
-===== _Partial orders_
+===== Partial orders
 
 A _partial order_ is a relation that is reflexive, antisymmetric, and
 transitive.
 
-==== _Equivalence relations_
+==== Equivalence relations
 
 An _equivalence relation_ is a relation that is reflexive, symmetric, and
 transitive.
@@ -332,7 +332,7 @@ in the function, it means that the input $x$ is associated with the output $y$.
 - If the requirement of totality is dropped, we get the set of partial functions, $A harpoon.rt B$
 - The _image_ is the set of all outputs of the function, ${y in B | x in A, f(x) = y}$
 
-==== _Identity, composition_
+==== Identity, composition
 
 - The _identity function_ $id_A: A → A$ is defined as $id_A(x) = x$
 - For functions $f in B -> C$ and $g in A -> B$ the _composition_ of $f compose g in A -> C$ is
@@ -340,7 +340,7 @@ in the function, it means that the input $x$ is associated with the output $y$.
 
 #pagebreak()
 
-==== _Injectivity_
+==== Injectivity
 
 An _injection_ is a function $f: A → B$ such that $forall x, y in A: f(x) = f(y) => x = y$
 
@@ -353,7 +353,7 @@ An _injection_ is a function $f: A → B$ such that $forall x, y in A: f(x) = f(
   caption: [Injective function],
 )
 
-==== _Surjectivity_
+==== Surjectivity
 
 A _surjection_ is a function $f: A → B$ such that $forall y in B: exists x in A: f(x) = y$
 
@@ -366,7 +366,7 @@ A _surjection_ is a function $f: A → B$ such that $forall y in B: exists x in 
   caption: [Surjective function],
 )
 
-==== _Bijectivity_
+==== Bijectivity
 
 A _bijection_ is a function $f: A → B$ such that $forall y in B: exists! x in A: f(x) = y$. _In simple terms, it is both injective and surjective._
 
@@ -466,51 +466,627 @@ with the formula:
 
 $ P(0) and (forall n in NN : P(n) => P(n+1)) => forall n in NN : P(n) $
 
+#pagebreak()
+
+== Complete/Strong induction
+
+We can also prove $forall n in NN: P(n)$ in the following way:
+
+- Prove $P(0)$
+- For every $n, i in NN$, prove that if $P(i)$ holds for all $i lt.eq n$, $P(n+1)$ holds.
+
+with the formula:
+
+$ P(0) and (forall n in NN: (forall i in NN: i lt.eq n => P(i)) => P(n+1)) => forall n in NN: P(n) $
+
+#example[
+  #lemma[
+    Every natural number $n gt.eq 8$ can be written as a sum of multiples of $3$ and $5$.
+  ]
+   
+  #proof[
+    _(by complete induction)_
+     
+    Let $P(n) := n gt.eq 8 => exists a, b in NN: n = 3a + 5b$
+     
+    We prove that $P(n)$ holds for all $n in NN$ by complete induction on $n$:
+     
+    _Basis:_ $(n = 8,9,10)$
+    - $P(8)$ holds since $8 = 3*1 + 5*1$.
+    - $P(9)$ holds since $9 = 3*3 + 5*0$.
+    - $P(10)$ holds since $9 = 3*0 + 5*2$.
+     
+    _Inductive step:_ $P(8) and P(9) and P(10) and dots.h.c and P(k) => P(k + 1) "where" k gt.eq i$
+     
+    _Induction hypothesis:_ Assume $P(i)$ is true for all $i in NN$ where 
+    $10 lt.eq i lt.eq k$
+     
+    _To prove:_ $P(k + 1) := k + 1 gt.eq 8 => exists a, b in NN: k + 1 = 3a + 5b$
+     
+    $ k + 1 = 3a + 5b & <=> k - 2 = 3a + 5b - 3 \
+                    & <=> k - 2 = 3(a-1) + 5b \ 
+                    & <=> k - 2 = 3a' + 5b $
+     
+    $k - 2 gt.eq 8$ and $k - 2 lt.eq k$, so by the _induction hypothesis_, $P(k - 2)$ holds,
+    thus $P(k+1)$ holds.
+     
+     
+  ]
+   
+]
+ 
+#pagebreak()
+ 
 == Proof by counterexample
-
-To prove that a statement is false, we can find a counterexample. _In general, to prove:_
-
-
-$   & not(forall "natural number predicates" P: P(0) and \
+ 
+To prove that a statement is false, we can find a counterexample. 
+ 
+_In general, to prove:_ $   & not(forall "natural number predicates" P: P(0) and \
   & (forall n in NN : n gt.eq 1 and P(n) => P(n + 1)) => \
   & forall n in NN : n gt.eq 1 => P(n)) $
-
-_we assume:_
-
-$   & forall "natural number predicates" P: P(0) and \
+ 
+_we assume:_ $   & forall "natural number predicates" P: P(0) and \
   & (forall n in NN : n gt.eq 1 and P(n) => P(n + 1)) => \
   & forall n in NN : n gt.eq 1 => P(n) $
-
+ 
 _and derive a contradiction._
-
+ 
 #example[
   The following statement does not hold for $P(n) := n eq.not 1$ and $n = 1$
    
   $ P(0) and (forall n in NN : n gt.eq 1 and P(n) => P(n+1)) => forall n in NN : n gt.eq 1 => P(n) $
    
   _The hypotheses hold, but not the conclusion._
-  
    
+  #proof[
+     
+    Let $P(n) := n eq.not 1$
+     
+    Base case: $P(0) := 0 eq.not 1$
+     
+    To disproof: 
+     
+    $   & forall n in NN : n gt.eq 1 and P(n) => P(n + 1) \
+      & forall n in NN : n gt.eq 1 and n eq.not 1 => n + 1 eq.not 1 $
+     
+    _Let $n = 1$_
+     
+    $   & n gt.eq 1 and P(n) => P(n+1) \
+      & n gt.eq 1 and P(1) => P(2) \
+      & 1 gt.eq 1 and 1 eq.not 1 => 1 + 1 eq.not 1 $
+     
+    $P(1) := 1 eq.not 1$ is a contradiction, so we are done.
+     
+  ]
 ]
 
+#pagebreak()
+
+== Inductively defined sets
+
+An inductively defined set is a set that is defined in such a way that its
+elements are generated by applying a set of rules or operations starting from
+some initial elements. The process of generating elements continues
+indefinitely, and it relies on a principle of induction.
+
+- *Base Elements:* Specify a set of initial elements that belong to the set. These
+  are the starting points for the construction of the set.
+- *Inductive Rules:* Define rules or operations that allow you to generate new
+  elements of the set based on the existing elements.
+- *Closure under Induction:* if an element belongs to the set, all the elements
+  generated from it using the inductive rules also belong to the set.
+
+#example[
+  An example of an inductively defined set is the set of natural numbers:
+   
+  $ "" / ("zero" in NN) wide (n in NN) / ("suc"(n) in NN) $
+]
+
+#example[
+  Another example, booleans:
+   
+  $ "" / ("true" in italic("Bool")) wide "" / ("false" in italic("Bool")) $
+]
+
+#example[
+  Another example, finite lists:
+   
+  $ "" / ("nil" in italic("List")(A)) wide (x in italic("A") wide x s in italic("List")(A)) / ("cons"(x, x s) in italic("List")(A)) $
+]
+
+_Note that "nil" stands for the empty list and "cons" stands for the construction
+of a list by adding an element to the front of an existing list (in haskell)._
+
+_Some alternative notations for lists:_
+- $[ med ] <=> $ nil
+- $x : x s <=> "cons"(x, x s)$
+- $[1,2,3] <=> "cons"(1, "cons"(2, "cons"(3, "nil")))$
+
+== Recursive functions
+
+A recursive function is a function that is defined in terms of itself. It is
+defined by a base case and a recursive case.
+
+#example[
+  $   &italic("length") in italic("List")(A) &->& NN \
+    &italic("length")("nil")               &= & "zero" \
+    &italic("length")("cons"(x,x s))       &= & "suc"(italic("length")(x s)) $
+]
+
+#example[
+  $   & f in italic("List")(A) times italic("List")(A) &->& italic("List")(A) \
+    & f("nil", y s)                                  &= & y s \
+    & f("cons"(x, x s), y s)                         &= & "cons"(x, f(x s, y s)) $
+]
+
+== Mutual induction
+
+In general, a proof by mutual induction of a statement A consists in proving a
+stronger statement than $A$, usually a statement of the form $A and B$, where $B$ can
+be seen as an _"auxiliary statement"_. The advantage is that now one can use a
+*stronger induction hypothesis* than in a proof of the mere statement $A$ by
+simple induction.
 
 
-= Nondeterministic finite automata
 
-== NFAS
+#example[
+  _The following is a nice example of a property about natural numbers that cannot
+  be proved by simple induction (at least, not in a natural way), but the proof by
+  mutual induction is very easy, because it gives a stronger induction hypothesis._
+   
+  Let $f,g,h in NN -> {0,1}$ be functions defined as follows:
+   
+   
+  $   & f(n) = cases(
+    #align(right)[#box[$0 quad$]]&\, "if" n=0,
+    #align(right)[#box[$g(n-1) quad$]]&\, "otherwise",
 
-LiKE DFAs but with multiple transisitons may be possible.
+  ) wide
+   
+  g(n) = cases(
+    #align(right)[#box[$1 quad$]]&\, "if" n=0,
+    #align(right)[#box[$f(n-1) quad$]]&\, "otherwise",
 
-- Can be in multiple states at once
-- Can be easier to “program”.
-- Can be much more compact.
+  ) \
+   
+    & h(n) = cases(
+    #align(right)[#box[$0 quad$]]&\, "if" n=0,
+    #align(right)[#box[$1 - h(n-1) quad$]]&\, "otherwise",
 
-An NFA can be given by a 5-tuple $(Q)$
+  ) $
+   
+  Let $P(n) := forall n in NN: h(n) = f(n)$.
+   
+  _It does not seem possible to prove the proposition by simple induction, the
+  induction hypothesis in this case is too weak. But the proof is quite easy if
+  you prove the following stronger statement, by (mutual) induction on $n in NN$:_
+   
+  Let $P'(n) := forall n in NN: h(n) = f(n) and h(n) = 1 - g(n)$.
+   
+  #proof[ 
+    By induction on $n in NN$.
+     
+    _Basis:_ $f(0) = 0 = h(0)$ and $h(0) = 0 = 1-1 = 1 - g(0)$
+     
+    _Inductive step:_ By induction hypothesis (i.h), $h(n) = f(n)$ and $h(n) = 1 - g(n)$.
+    Hence,
+     
+    $ f(n+1) &= g(n) = 1 - h(n) = 1 - f(n) = h(n+1) \
+    h(n+1) &= 1 - h(n) = 1 - f(n) = 1 - g(n+1) $
+  ]
+   
+  _Note that in the inductive step, to prove that $f(n+1)=h(n+1)$ we use the
+  inductive hypothesis about the second statement, i.e. $h(n)=1−g(n)$. Conversely,
+  to prove that $h(n+1)=1−g(n+1)$ we use the inductive hypothesis about the first
+  statement, i.e. $f(n)=h(n)$. This is the essence of mutual induction._
+]
+ 
+#pagebreak()
+
+= Structural induction & automata theory
+
+== Structural induction
+
+Structural induction is a proof technique that can be used to prove properties
+of recursively defined objects, such as inductively defined sets and recursive
+functions.
+
+#example[
+  For a given inductivley defined set we have a corresponding induction
+  prionciple.
+   
+  Consider the following inductively defined set of natural numbers:
+   
+  $ "" / ("zero" in NN) wide (n in NN) / ("suc"(n) in NN) $
+   
+  In order to prove $forall n in NN: P(n)$:
+   
+  - Prove $P("zero")$
+  - Prove $forall n in NN: P(n) => P("suc"(n))$
+]
+
+#example[
+  Another example, booleans:
+   
+  $ "" / ("true" in italic("Bool")) wide "" / ("false" in italic("Bool")) $
+   
+  In order to prove $forall b in italic("Bool"): P(b)$:
+  - Prove $P("true")$
+  - Prove $P("false")$
+]
+
+#example[
+  Another example, finite lists:
+   
+  $ "" / ("nil" in italic("List")(A)) wide (x in italic("A") wide x s in italic("List")(A)) / ("cons"(x, x s) in italic("List")(A)) $
+   
+  In order to prove $forall x s in italic("List")(A): P(x s)$:
+  - Prove $P("nil")$
+  - Prove $forall x in A: forall x s in italic("List")(A): P(x s) => P("cons"(x, x s))$
+]
+
+The pattern of proving a proposition with structural induction.
+
+Consider an inductivley defined set:
+
+$ dots.h.c quad (x in italic("A") wide d in D(A)) 
+/ (c(x,dots,d) in D(A)) quad dots.h.c $
+
+In order to prove $forall d in D(a):P(d)$:
+- $dots.v$
+- $forall x in A, dots, d in D(A)$, prove that $dots$ and $P(d) => P(c(x, dots, d))$.
+- $dots.v$
+
+_One inductive hypothesis for each recutsive argument._
+
+#pagebreak()
+
+== Notes on induction/recursion
+
+- _Inductively defined sets:_ interference rules with constructors.
+- _Recursion (primitive recursion):_ recursive calls only for recursive arguments
+  $f(c(x,d)) = dots.h.c f(d) dots.h.c$.
+- _Structural induction:_ inductive hypotheses for recursive arguments $P(d) => P(c(x,d))$.
+
+== Concepts from automata theory
+
+=== Alphabets and strings
+
+An alphabet is a finite, nonempty set of symbols.
+- ${a,b,c,dots.h.c,z}$
+- ${0,1,dots.h.c,9}$
+
+A string (or word) over the alphabet is $Sigma$ is a member of _List_($Sigma$).
+
+
+=== Some conventions
+
+Following the course text book:
+- $Sigma:$ An alphabet
+- $a,b,c:$ Elements of $Sigma$
+- $u,v,w:$ Words (strings) over $Sigma$
+
+=== Simple notation
+
+#table(
+  columns: (auto, auto),
+  inset: 10pt,
+  align: center,
+  [$Sigma^*$],
+  [_List_$(Sigma)$],
+  [$epsilon$],
+  [nil or $[med]$],
+  [a w],
+  [cons(a, w)],
+  [$a$],
+  [cons$(a,"nil")$ or $[a]$],
+  [$a,b,c$],
+  [$[a,b,c]$],
+  [$u v$],
+  [append(u, v)],
+  [|w|],
+  [length(w)],
+  [$sigma^+$],
+  [nonempty strings, ${w in Sigma^* | w eq.not epsilon}$],
+)
+
+=== Exponentiation
+
+$Sigma^n:$ Strings of length $n$, ${w in Sigma^* | |w| = n}$
+
+#example[
+  ${a,b}^2 = {a a, a b, b a, b b}$
+]
+
+==== Alternative definition of $Sigma^n subset.eq Sigma^*$
+- $Sigma^0 = {epsilon}$
+- $Sigma^{n+1} = {a w | a in Sigma, w in Sigma^n}$
+
+#pagebreak()
+
+==== Repeated strings
+
+$w^n$: $w$ repeated $n$ times
+
+#example[
+  $a b^2 = 𝑎 𝑏 𝑎 𝑏 𝑎 𝑏$
+]
+
+==== Recursive definitions of functions on strings
+
+- $w^0 = epsilon$
+- $w^{n+1} = w w^n$
+
+=== Languages
+
+A language over an alphabet $Sigma$ is a subset $L subset.eq Sigma^*$. Examples
+of such languages are typical programming languages such as C, Java, and Python
+and regular written languages. Another example is the odd natural numbers
+expressed in binary notation (without leading zeroes), which is a language over
+the alphabet ${0,1}$.
+
+Following the course text book: $L,M,N:$ Languages over $Sigma$.
+
+=== Operations on languages
+
+Some of these are mentioned earlier.
+
+#table(
+  columns: (auto, auto, auto),
+  inset: 10pt,
+  align: center,
+  [*Operation*],
+  [*Rule*],
+  [*Example*],
+  [Concatenation],
+  [$L M = {u v | u in L, v in M}$],
+  [${a, b c}{d e , f} = {a d e, a f, b c d e, b c f}$],
+  [Exponentiation],
+  [$L^0 = {epsilon}$, $L^{n+1} = L L^n$],
+  [${a, b c}^2 &= {a, b c}({a, b c}^1) \ &= {a, b c}({a, b c}{epsilon}) \ &= {a, b c}{a, b c} \ &= {a a, a b c, b c a, b c b c}$],
+  [The _Kleene star_],
+  [$L^* = union.big_(n in NN) L^n$],
+  [${a, b c}^* &= {a, b c}^0 union {a,b c}^1 union {a, b c}^2 union dots.h.c \ &= {epsilon, a, b c, a a, a b c, b c a, b c b c, dots.h.c}$],
+)
+
+#pagebreak()
+
+== Inductivley defined subsets
+
+One can define subsets of (say) $Sigma^*$ inductively. For instance, for $L subset.eq Sigma^*$ we
+can define $L^* subset.eq Sigma^*$ inductively as follows:
+
+$ "" / (epsilon in L^*) wide (u in L quad v in L^*) / (u v in L^*) $
+
+_Note that there are no constructors (but in some cases it might make sense to
+name the rules)_.
+
+#example[
+  $a b a in {a, a b}^*$
+   
+  #proof[
+    $ (overline(a b in {a, a b}) wide (overline(a in {a, a b}) wide overline(epsilon in {a, a b})) / (a in {a, a b}^*)) / (a b a in {a, a b}^*) $
+  ]
+]
+
+_some more shit on recursion with subsets is to be added here!_
+
+#pagebreak()
+
+= Deterministic finite automata
+
+A _DFA_ specifies a language. In @even_diagram, the language is : ${11}^* = {epsilon, 11, 1111, dots.h.c}$.
+One of many use cases of _DFAs_ is the implementation of regular expression
+matching. 
+
+#figure(image("figures/DFA.png", width: 60%), caption: [Transition diagram]) <even_diagram>
+
+A _DFA_ is given by a 5-tuple $(Q,Sigma, delta, q_0, F)$ where 
+
+- $Q:$ The finite set of states.
+- $Sigma:$ The alphabet.
+- $delta in Q times Sigma -> Q:$ The transition function.
+- $q_0 in Q:$ The starting state.
+- $F subset.eq Q:$ The set of accepting states
+
+The diagram in @even_diagram corresponds to the 5-tuple
+
+$ italic("Even") = ({s_0,s_1},{1}, delta, s_0, {s_0}) $
+
+where $delta$ is defined in the following way:
+
+$   & delta in {s_0,s_1} times {1} -> {s_0,s_1} \
+  & delta(s_0, 1) = s_1 \
+  & delta(s_1, 1) = s_0 $
+
+== Semantics
+
+#definition[
+  The language $L(A)$ of a DFA $A = (Q, Sigma, delta, q_0, F)$ is defined in the
+  following way: 
+   
+  A transition function for strings which is defined by recursion: 
+   
+  $   &hat(delta) in Q times Sigma^* &->& Q \
+    &hat(delta)(q,epsilon)         &= & q \
+    &hat(delta)(q, a w)            &= & hat(delta)(delta(q, a),w) $ 
+   
+  The language of $A$ is defined as the set of all strings $w in Sigma^*$ such
+  that $hat(delta)(q_0, w) in F$:
+   
+  $ L(A) = {w in Sigma^* | hat(delta)(q_0, w) in F} $
+]
+
+#example[
+  The language of the DFA in @even_diagram is specified as follows:
+   
+  $ hat(delta)(s_0,11) &= hat(delta)(delta(s_0, 1),1) \
+                     &= hat(delta)(s_1,1) \
+                     &= hat(delta)(delta(s_1, 1),epsilon) \
+                     &= hat(delta)(s_0, epsilon) \
+                     &= s_0 $
+]
+
+== Transition diagrams
+
+A transition diagram is a graphical representation of a DFA. The states are
+represented by circles, the transitions by arrows, and the accepting states by
+double circles.
+
+- One node per state.
+- An arrow "from nowhere" to the starting state.
+- Double circles for accepting states.
+- For every transition $delta(s_1, a) = s_2$, an arrow marked with $a$ from $s_1$ to $s_2$.
+  (multiple arrows can be combined)
+
+#figure(
+  image("figures/td_missing_trans.png", width: 50%),
+  caption: [TD with missing transitions],
+) <missing_trans>
+
+#figure(
+  image("figures/td_missing_trans_2.png", width: 50%),
+  caption: [Every missing tranisition goes to a new state (that is not accepting)],
+) <missing_trans_2>
+
+_Note that diagrams with missing tranisitions do not define the alphabet
+unambiguousely. Consider the diagram in @missing_trans, the alphabet must be a
+(finite) superset of ${"'"0"'","'"1"'",dots.h.c, "'"9"'"}$, but which one?_
+
+#pagebreak()
+
+== Transition tables
+
+A transition table is a tabular representation of a DFA. The states are
+represented by rows, the transitions by columns, and the accepting states by
+double entries.
+
+#figure(
+  image("figures/trans_table.png", width: 20%),
+  caption: [Transition table],
+) <trans_table>
+
+- _States:_ left column.
+- _Alphabet:_ top row.
+- _Starting state:_ marked with $->$.
+- _Accepting states:_ marked with $*$
+- _Transition function:_ table.
+
+#pagebreak()
+
+== Constructions
+
+Given a DFA $A = (Q,Sigma, delta,q_0,F)$ we can construct a DFA $overline(A)$ that
+satisfies the following property:
+
+$ L(overline(A)) = overline(L(A)) := Sigma^* backslash L(A) $
+
+Construction:
+
+$ overline(A) = (Q,Sigma, delta,q_0,Q backslash F) $
+
+_We accept if the original automaton doesn't. (what???)_
+
+#example[
+  Let $A$ be
+   
+  #figure(image("figures/DFA_1.png", width: 40%))
+   
+  Then $overline(A)$ is
+   
+  #figure(image("figures/DFA_2.png", width: 40%))
+]
+
+== Product construction
+
+Given two DFAs $A_1 = (Q_1,Sigma, delta_1,q_01,F_1)$ and $A_2 = (Q_2,Sigma, delta_2,q_02,F_2)$ with
+the same alphabet, we can construct a DFA $A_1 times.circle A_2$ that satisfies
+the following property:
+
+$ L(A_1 times.circle A_2) = L(A_1) sect L(A_2) $
+
+Construction:
+
+$ A_1 times.circle A_2 = (Q_1 times Q_2,Sigma, delta,(q_01,q_02),F_1 times F_2) $
+
+where
+
+$ delta((s_1,s_2), a) = (delta_1(s_1,a),delta_2(s_2,a)) $
+
+_We basically run the two automatons in parallel and accept if both accept._
+
+#pagebreak()
+
+== Sum Construction
+
+Given two DFAs $A_1 = (Q_1,Sigma, delta_1,q_01,F_1)$ and $A_2 = (Q_2,Sigma, delta_2,q_02,F_2)$ with
+the same alphabet, we can construct a DFA $A_1 plus.circle A_2$ that satisfies
+the following property:
+
+$ L(A_1 plus.circle A_2) = L(A_1) union L(A_2) $
+
+Construction:
+
+$ A_1 plus.circle A_2 = (Q_1 union Q_2,Sigma, delta,(q_01,q_02),F_1 union F_2) $
+
+where
+
+$   & delta((s_1,s_2), a) = cases(
+  #align(right)[#box[$(delta_1(s_1, a),s_2 ) quad$]]&\, "if" q in Q_1,
+  #align(right)[#box[$(s_1, delta_2(s_2, a)) quad$]]&\, "if" q in Q_2,
+
+) $
+
+== Accessible states
+
+Let $A = (Q, Sigma, delta, q_0, F)$ be a DFA. The set _Acc_$(q) subset.eq Q$ of
+states that are accessible from $q in Q$ can be defined in the following way:
+
+$ italic("Acc")(q) = {hat(delta)(q,w) | w in Sigma^*} $
+
+To construct a possible smaller DFA, which satisfies $L(A) = L(A'):$
+
+$  & A' & = & (italic("Acc")(q_0), Sigma, delta', q_0, F sect italic("Acc")(q_0)) \
+   & delta'(q,a) & = & delta(q, a) $
+
+#example[
+  The following two DFAs define the same language:
+
+  #figure(image("figures/acc_states_1.png", width: 40%), caption: [$A$])
+
+  #figure(image("figures/acc_states_2.png", width: 40%), caption: [$A'$])
+
+  _Notice that $A$ has unreachable states from the starting state $q_0$. We can ignore these states and construct $A'$._ 
+]
+
+== Regular languages
+
+A language $M subset.eq Sigma^*$ is _regular_ if there exists a DFA $A$ with alphabet $Sigma$ such that $L(A) = M$.
+
+- Note that if $M$ and $N$ are regular, then so are $M sect N$, $M union N$, and $overline(M)$.
+- We will see later that if $M$ and $N$ are regular, then so are $M N$.
+
+= Non-deterministic finite automata & the subset construction
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
  
  
  
