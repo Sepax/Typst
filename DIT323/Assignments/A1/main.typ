@@ -140,14 +140,14 @@ Let $P(w) := hash_a (w) = 2  hash_b (w)$.
   $ hash_a ( italic("auavb") ) &= 2 + hash_a (u) + hash_a (v) & & wide ("lemma" l_2) \
     &= 2 + 2 hash_b (u) + 2 hash_b (v) & & wide ("i.h") \
     &= 2 (1 + hash_b (u) + hash_b (v)) & & wide ("arithmetic") \
-    &= 2 hash_b ( italic("auavb") ) & & wide  $
+    &= 2 hash_b ( italic("auavb") ) & & wide ("by definition of" hash_b) $
 
   #linebreak()
   
-  $ hash_a ( italic("buavaw") ) &= 2 + hash_a (u) + hash_a (v) & & wide ("by statement") \
+  $ hash_a ( italic("buavaw") ) &= 2 + hash_a (u) + hash_a (v) & & wide ("lemma" l_2) \
     &= 2 + 2 hash_b (u) + 2 hash_b (v) & & wide ("i.h") \
     &= 2 (1 + hash_b (u) + hash_b (v)) & & wide ("arithmetic") \
-    &= 2 hash_b ( italic("buavaw") ) & & wide ("by statement") $
+    &= 2 hash_b ( italic("buavaw") ) & & wide  ("by definition of" hash_b) $
 
   $therefore forall w in S. P(w)$.
 ]
@@ -170,11 +170,73 @@ _Question:_ Let $Sigma = {0}$ and define $f, g, h in Sigma^* -> NN$ recursively 
 
 _Question:_ Compute the values of $f(00), g(00), h(00), f(000), g(000), h(000), f(0000), g(0000), h(0000)$
 
+_Solution:_
+
+$ &f(00) &= 3 quad
+&g(00) &= 1 quad
+&h(00) &= 2 \
+&f(000) &= 4 quad
+&g(000) &= 1 quad
+&h(000) &= 3 \
+&f(0000) &= 5 quad
+&g(0000) &= 1 quad
+&h(0000) &= 4 $
+
+
+#pagebreak()
+
 ==
 
 _Question:_ Prove that $forall n in NN. f(0^n) = 1+n$.
 
 _Hint:_ First prove that $forall n in NN. g(0^n) = 1 and h(0^n) = n$.
+
+_Solution:_
+
+==== Proof of lemma from hint
+
+_Lemma to prove:_ $l_3:$ $forall n in NN. g(0^n) = 1 and h(0^n) = n$.
+
+Let $P(n) := g(0^n) = 1 and h(0^n) = n$.
+
+#proof[
+  By induction on $n$.
+
+  _Basis:_ $P(0)$ is true since $g(0^0) = g(epsilon) = 1 = 1 and h(0^0) = 1 and h(epsilon) = 1 and 1 = 1$.
+
+  _Inductive step:_ Assume $P(n)$ is true for some arbitrary  $n in NN$ _(i.h.)_. We want to show that $P(n+1)$ is true.
+
+  Let $n in NN$. Then,
+
+  $ g(0^{n+1}) &= |0^n| + g(0^n) + -h(0^n) & & wide ("by definition of" g) \
+    &= n + 1 + 1 + -n & & wide ("i.h") \
+    &= 1 & & wide $
+
+  $therefore forall n in NN. g(0^n) = 1 and h(0^n) = n$
+]
+
+==== Proof of main statement
+
+_Statement to prove:_ $forall n in NN. f(0^n) = 1+n$.
+
+Let $P(n) := f(0^n) = 1+n$.
+
+#proof[
+  By induction on $n$.
+
+  _Basis:_ $P(0)$ is true since $f(0^0) = f(epsilon) = 1 = 1 + 0$.
+
+  _Inductive step:_ Assume $P(n)$ is true for some arbitrary  $n in NN$ _(i.h.)_. We want to show that $P(n+1)$ is true.
+
+  Let $n in NN$. Then,
+
+  $ f(0^{n+1}) &= h(0^n) + 2 g(0^n) & & wide ("by definition of" f) \
+   &= n + 2 & & wide ("lemma" l_3) \
+   &= 1 + (n + 1) $
+
+  $therefore forall n in NN. f(0^n) = 1+n$
+]
+
 
 
 
