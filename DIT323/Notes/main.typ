@@ -756,7 +756,7 @@ An alphabet is a finite, nonempty set of symbols.
 - ${a,b,c,dots.h.c,z}$
 - ${0,1,dots.h.c,9}$
 
-A string (or word) over the alphabet is $Sigma$ is a member of _List_($Sigma$).
+A string (or word) over the alphabet $Sigma$ is a member of _List_($Sigma$).
 
 
 === Some conventions
@@ -786,7 +786,7 @@ Following the course text book:
   [append(u, v)],
   [|w|],
   [length(w)],
-  [$sigma^+$],
+  [$Sigma^+$],
   [nonempty strings, ${w in Sigma^* | w eq.not epsilon}$],
 )
 
