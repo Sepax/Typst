@@ -1,0 +1,12 @@
+         a    b        
+→ * s0s0 s0s1 s1s0
+    s0s1 s0s2 s1s3
+    s0s2 s0s2 s1s2
+  * s1s0 s2s1 s1s0
+    s1s2 s2s2 s1s2
+    s1s3 s2s2 s1s4
+  * s1s4 s2s1 s1s4
+    s2s1 s3s2 s1s3
+    s2s2 s3s2 s1s2
+  * s3s2 s3s2 s3s2
+

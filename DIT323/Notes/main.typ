@@ -1,5 +1,6 @@
 
 #import "template.typ": *
+
 #show: template.with(
   title: [Finite automata and formal languages],
   short_title: "DIT084",
@@ -1066,7 +1067,14 @@ A language $M subset.eq Sigma^*$ is _regular_ if there exists a DFA $A$ with alp
 - Note that if $M$ and $N$ are regular, then so are $M sect N$, $M union N$, and $overline(M)$.
 - We will see later that if $M$ and $N$ are regular, then so are $M N$.
 
-= Non-deterministic finite automata & the subset construction
+= NFAs & the subset construction
+
+= NFAs with ε-transitions & exponential blowup
+
+hej
+
+
+
 
 
 

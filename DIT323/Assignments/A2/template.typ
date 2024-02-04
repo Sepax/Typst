@@ -310,7 +310,7 @@
   }
    
   // Display the lecture notes' table of contents.
-  outline(indent: auto, depth: 2)
+  // outline(indent: auto, depth: 2)
    
   if lof [
     #v(3pt)
