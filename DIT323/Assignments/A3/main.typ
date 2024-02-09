@@ -62,41 +62,94 @@ The regular expression is: $R = 1(1+01)^+$
 =
 
 
+Let the following table represent the NFA:
 
+#table(
+  columns: (auto, auto, auto, auto),
+  inset: 10pt,
+  align: horizon,
+  [*State*], [$epsilon$], [$a$], [$b$],
+  [$-> s_0$], [$emptyset$], [$s_1$], [${s_0,s_2}$],
+  [$ s_1$], [$s_2$], [$s_4$], [$s_3$],
+  [$s_2$], [$emptyset$], [${s_1, s_4}$], [$s_3$],
+  [$s_3$], [$s_5$], [${s_4,s_5}$], [$emptyset$],
+  [$s_4$], [$s_3$], [$emptyset$], [$s_5$],
+  [$"*" s_5$], [$emptyset$], [$s_5$], [$s_5$]
+)
 
+We then define the following DFA by subset construction:
+
+#table(
+  columns: (auto, auto, auto),
+  inset: 10pt,
+  align: horizon,
+  [*State*],  [$a$], [$b$],
+  [$-> s_0$], [${s_1,s_2}$], [${s_0, s_2}$],
+  [${s_1,s_2}$], [${s_1,s_2,s_3,s_4,s_5}$],[${s_3,s_5}$],
+  [${s_0, s_2}$], [${s_1,s_2,s_3,s_4,s_5}$], [${s_0,s_2,s_3,s_5}$],
+  [$"*"{s_1,s_2,s_3,s_4,s_5}$], [${s_1,s_2,s_3,s_4,s_5}$], [${s_3,s_5}$],
+  [$"*"{s_3,s_5}$],[${s_3,s_4,s_5}$], [{$s_5$}],
+  [${s_0,s_2,s_3,s_5}$], [${s_0,s_1,s_2,s_3,s_4,s_5}$],[${s_0,s_2,s_3,s_5}$],
+  [$"*"{s_3,s_4,s_5}$],[${s_3,s_4,s_5}$],[$s_5$],
+  [$"*" s_5$], [$s_5$], [$s_5$],
+  [${s_0,s_1,s_2,s_3,s_4,s_5}$],[${s_1,s_2,s_3,s_4,s_5}$],[${s_0,s_2,s_3,s_5}$]
+)
+
+#pagebreak()
 
 =
 
-We will solve this problem by removing each node one by one and construct the
-regular expression in steps by writing subexpressions for each edge in the NFA.
+Transition diagram for the NFA:
 
-We start by adding node $I$ and $F$ that stands for the initial and final state
-of the NFA.
+#figure(image("figures/F9.jpg", width: 70%))
 
-#figure(image("figures/F1.jpg", width: 50%)) 
+Let's define the following equations for the NFA:
 
-Then we remove node $q_0$ and add the subexpressions to the new edges in the
-NFA.
+$ q_0 &= epsilon + q_0 a \ 
+q_1 &= q_0 b + q_2 b \
+q_2 &= q_0 c + q_1 c \
+q_3 &= q_1 b + q_3 c \
+q_4 &= q_3 a + q_4 b + q_2 c $
 
-#figure(image("figures/F2.jpg", width: 50%)) 
+The goal is to find the regular expression for the final state, $q_4$.
 
-Then we remove node $q_1$ and do the same thing.
+For $q_0$ we have:
 
-#figure(image("figures/F3.jpg", width: 50%)) 
+$ q_0 &= epsilon + q_0 a & & \
+      &= epsilon a^* wide & & ("Arden's lemma") $
 
-Then we remove node $q_3$ and do the same thing.
+For $q_1$ we have:
 
-#figure(image("figures/F4.jpg", width: 50%)) 
+$ q_1 &= q_0 b + q_2 b \ 
+      &= q_0 b + (q_0 c + q_1 c) b wide & & ("Substitute" q_2) \
+      &= q_0 b + q_0 c b + q_1 c b \ 
+      &= (q_0 b + q_0 c b) (c b)^* wide & & ("Arden's lemma") $
 
-Finally we remove node $q_2$ and $q_4$ and do the same thing.
+For $q_2$ we have:
 
-#figure(image("figures/F5.jpg", width: 50%)) 
+$ q_2 &= q_0 c + q_1 c \ 
+      &= q_0 c + (q_0 b + q_0 c b) (c b)^* c wide & & ("Substitute" q_1) $
 
-We get the following regular expression:
+#pagebreak()
 
-$ (a^* b c c + a^* b (c b)^* c c + a^* b b c c + a^* c c c + a^* b b a c + a^* c a c) b^*$
+For $q_3$ we have:
 
-We can remove the first term $a^* b c c $ because this is a subset of the second
-term $a^* b (c b)^* c c$. Thus we get the final regular expression:
+$ q_3 &= q_1 b + q_3 c \
+      &= q_1 b c^* $
 
-$(a^* b (c b)^* c c + a^* b b c c + a^* c c c + a^* b b a c + a^* c a c) b^*$
+
+Now we solve $q_4$:
+
+$ q_4 &= q_3 a + q_4 b + q_2 c & \
+    &= (q_3 a + q_2 c) b^*  & ("Arden's lemma") \
+    &= ((q_1 b c^*) a + (q_0 c + (q_0 b + q_0 c b) (c b)^* c) c) b^*  & ("Substitute" q_3 "and" q_2 ) \
+    &= (q_1 b c^* a + q_0 c c + q_0 b (c b)^* c c + q_0 c b (c b)^* c c ) b^*  & ("Simplify") \
+    &= (((q_0 b + q_0 c b) (c b)^*) b c^* a + q_0 c c + q_0 b (c b)^* c c + q_0 c b (c b)^* c c ) b^*  & ("Substitute" q_1) \
+    &= (q_0 b (c b)^* b c^* a + q_0 c b (c b)^* b c^* a + q_0 c c + q_0 b (c b)^* c c + q_0 c b (c b)^* c c ) b^*  & ("Simplify") \
+    &= (epsilon a^* b (c b)^* b c^* a + epsilon a^* c b (c b)^* b c^* a + epsilon a^* c c + epsilon a^* b (c b)^* c c + epsilon a^* c b (c b)^* c c ) b^*  & ("Substitute" q_0) \
+    &= (a^* b (c b)^* b c^* a + a^* c b (c b)^* b c^* a + a^* c c + a^* b (c b)^* c c + a^* c b (c b)^* c c ) b^*  & ("Remove" epsilon) \
+    &= a^* (b (c b)^* b c^* a + c b (c b)^* b c^* a + c c + b (c b)^* c c + c b (c b)^* c c ) b^*  & ("Simplify") \
+$
+
+
+
