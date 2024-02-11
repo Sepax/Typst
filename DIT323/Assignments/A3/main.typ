@@ -1,7 +1,7 @@
 
 #import "template.typ": *
 #show: template.with(
-  title: [Finite automata and formal languages #linebreak() Assignment 2],
+  title: [Finite automata and formal languages #linebreak() Assignment 3],
   short_title: "DIT084",
   description: [
     DIT323 (Finite automata and formal languages)\ at Gothenburg University
@@ -40,11 +40,11 @@ Let's construct a NFA for R:
 The NFA for R is the thus following:
 
 #sourcecode[```
-     0       1 
-→ q0 {q0,q1} {q2} 
-  q1 Ø       {q0,q1}
-  q2 Ø       q3
-* q3 q3      q3
+     0       1    
+→ q0 {q0 q1} {q2 q3} 
+  q1 {}      {q0 q1} 
+  q2 {}      {q3}    
+* q3 {q3}    {q3} 
 ```
 ]
 
@@ -89,10 +89,9 @@ We then define the following DFA by subset construction:
   [${s_0, s_2}$], [${s_1,s_2,s_3,s_4,s_5}$], [${s_0,s_2,s_3,s_5}$],
   [$"*"{s_1,s_2,s_3,s_4,s_5}$], [${s_1,s_2,s_3,s_4,s_5}$], [${s_3,s_5}$],
   [$"*"{s_3,s_5}$],[${s_3,s_4,s_5}$], [{$s_5$}],
-  [${s_0,s_2,s_3,s_5}$], [${s_0,s_1,s_2,s_3,s_4,s_5}$],[${s_0,s_2,s_3,s_5}$],
+  [${s_0,s_2,s_3,s_5}$], [${s_1,s_2,s_3,s_4,s_5}$],[${s_0,s_2,s_3,s_5}$],
   [$"*"{s_3,s_4,s_5}$],[${s_3,s_4,s_5}$],[$s_5$],
-  [$"*" s_5$], [$s_5$], [$s_5$],
-  [${s_0,s_1,s_2,s_3,s_4,s_5}$],[${s_1,s_2,s_3,s_4,s_5}$],[${s_0,s_2,s_3,s_5}$]
+  [$s_5$], [$s_5$], [$s_5$]
 )
 
 #pagebreak()
